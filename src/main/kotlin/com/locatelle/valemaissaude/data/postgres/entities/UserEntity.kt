@@ -1,28 +1,33 @@
 package com.locatelle.valemaissaude.data.postgres.entities
 
-import com.locatelle.valemaissaude.data.enums.GenderEnum
-import com.locatelle.valemaissaude.data.enums.UserTypeEnum
-import com.locatelle.valemaissaude.data.enums.UserTypeEnum.DEFAULT
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType.STRING
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToOne
-import jakarta.persistence.Table
+import com.locatelle.valemaissaude.enums.GenderEnum
+import com.locatelle.valemaissaude.enums.UserTypeEnum
+import com.locatelle.valemaissaude.enums.UserTypeEnum.DEFAULT
+import com.locatelle.valemaissaude.models.UserModel
+import org.hibernate.annotations.GenericGenerator
 import java.time.LocalDate
 import java.util.UUID
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.EnumType.STRING
+import javax.persistence.Enumerated
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.OneToOne
+import javax.persistence.Table
 
 @Entity
 @Table(name = "tb_user")
 class UserEntity(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
     val id: UUID? = null,
 
     @Column(name = "full_name", nullable = false)
@@ -48,17 +53,54 @@ class UserEntity(
 
     @OneToOne
     @JoinColumn(name = "profile_photo_id", nullable = true)
-    val profilePhoto: ImageEntity,
+    val profilePhoto: ImageEntity? = null,
 
     @OneToOne
     @JoinColumn(name = "address_id", nullable = true)
-    val address: AddressEntity,
+    val address: AddressEntity? = null,
 
     @Enumerated(STRING)
-    @Column(name = "cep", nullable = false)
+    @Column(name = "user_type", nullable = false)
     val userType: UserTypeEnum? = DEFAULT,
 
     @ManyToOne
     @JoinColumn(name = "professional_id", nullable = true)
     val professionalId: UserEntity? = null
-)
+) {
+
+    fun toUserModel() = UserModel(
+        id = id,
+        fullName = fullName,
+        birthDate = birthDate,
+        cpf = cpf,
+        gender = gender,
+        phoneNumber = phoneNumber,
+        email = email,
+        password = password,
+        profilePhoto = profilePhoto?.toImageModel(),
+        address = address?.toAddressModel(),
+        userType = userType,
+        professionalId = professionalId?.id
+    )
+
+    companion object {
+
+        fun of(
+            userModel: UserModel,
+            professionalEntity: UserEntity?
+        ) = UserEntity(
+            id = userModel.id,
+            fullName = userModel.fullName,
+            birthDate = userModel.birthDate,
+            cpf = userModel.cpf,
+            gender = userModel.gender,
+            phoneNumber = userModel.phoneNumber,
+            email = userModel.email,
+            password = userModel.password,
+            profilePhoto = userModel.profilePhoto?.let { ImageEntity.of(userModel.profilePhoto) },
+            address = userModel.address?.let { AddressEntity.of(userModel.address) },
+            userType = userModel.userType,
+            professionalId = professionalEntity
+        )
+    }
+}

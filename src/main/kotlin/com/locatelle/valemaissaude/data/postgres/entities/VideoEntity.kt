@@ -1,21 +1,32 @@
 package com.locatelle.valemaissaude.data.postgres.entities
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import com.locatelle.valemaissaude.models.VideoModel
+import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.Table
 
 @Entity
 @Table(name = "tb_video")
 class VideoEntity(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
     val id: UUID,
 
     @Column(name = "reference", nullable = false)
     val reference: String
-)
+) {
+
+    fun toVideoModel() = VideoModel(
+        id = id,
+        reference = reference
+    )
+}

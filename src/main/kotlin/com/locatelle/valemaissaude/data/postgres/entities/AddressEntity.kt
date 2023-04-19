@@ -1,19 +1,24 @@
 package com.locatelle.valemaissaude.data.postgres.entities
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import com.locatelle.valemaissaude.models.AddressModel
+import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.Table
 
 @Entity
 @Table(name = "tb_address")
 class AddressEntity(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
     val id: UUID? = null,
 
     @Column(name = "cep", nullable = false)
@@ -33,4 +38,27 @@ class AddressEntity(
 
     @Column(name = "house_number", nullable = true)
     val houseNumber: String
-)
+) {
+
+    fun toAddressModel() = AddressModel(
+        id = id,
+        cep = cep,
+        state = state,
+        city = city,
+        district = district,
+        street = street,
+        houseNumber = houseNumber
+    )
+
+    companion object {
+        fun of(address: AddressModel) = AddressEntity(
+            id = address.id,
+            cep = address.cep,
+            state = address.state,
+            city = address.city,
+            district = address.district,
+            street = address.street,
+            houseNumber = address.houseNumber
+        )
+    }
+}

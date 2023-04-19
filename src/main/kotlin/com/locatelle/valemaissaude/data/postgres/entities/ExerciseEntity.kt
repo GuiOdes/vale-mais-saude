@@ -1,22 +1,27 @@
 package com.locatelle.valemaissaude.data.postgres.entities
 
-import com.locatelle.valemaissaude.data.enums.ExerciseGroupEnum
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType.STRING
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import com.locatelle.valemaissaude.enums.ExerciseGroupEnum
+import com.locatelle.valemaissaude.models.ExerciseModel
+import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.EnumType.STRING
+import javax.persistence.Enumerated
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.OneToMany
+import javax.persistence.Table
 
 @Entity
 @Table(name = "TB_EXERCISE")
 class ExerciseEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
     val id: UUID? = null,
 
     @Column(name = "title", nullable = false)
@@ -39,5 +44,17 @@ class ExerciseEntity(
     val group: ExerciseGroupEnum,
 
     @OneToMany
-    val video: List<VideoEntity>
-)
+    val videos: List<VideoEntity>
+) {
+
+    fun toExerciseModel() = ExerciseModel(
+        id = id,
+        title = title,
+        explanation = explanation,
+        countSets = countSets,
+        setRepetitionCount = setRepetitionCount,
+        repetitionDuration = repetitionDuration,
+        group = group,
+        videos = videos.map { it.toVideoModel() }
+    )
+}

@@ -9,6 +9,6 @@ CREATE TABLE tb_user (
     password VARCHAR(255) NOT NULL,
     profile_photo_id UUID REFERENCES tb_image(id),
     address_id UUID REFERENCES tb_address(id),
-    user_type VARCHAR(10) NOT NULL,
+    user_type VARCHAR(20) NOT NULL,
     professional_id UUID REFERENCES tb_user(id)
 );

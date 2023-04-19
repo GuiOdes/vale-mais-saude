@@ -1,4 +1,4 @@
-package com.locatelle.valemaissaude.data.enums
+package com.locatelle.valemaissaude.enums
 
 enum class ExerciseGroupEnum {
     SHOULDER, // Ombro
