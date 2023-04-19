@@ -6,6 +6,7 @@ plugins {
 	kotlin("jvm") version "1.7.22"
 	kotlin("plugin.spring") version "1.7.22"
 	kotlin("plugin.jpa") version "1.7.22"
+	id("io.gitlab.arturbosch.detekt").version("1.21.0")
 }
 
 group = "com.locatelle"
@@ -19,24 +20,53 @@ repositories {
 extra["testcontainersVersion"] = "1.17.6"
 
 dependencies {
+
+	// Spring Addons
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	// Database addons
 	runtimeOnly("org.postgresql:postgresql")
+	implementation("org.flywaydb:flyway-core")
+
+	// Test implementations
+	testImplementation("org.testcontainers:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.testcontainers:junit-jupiter")
-	testImplementation("org.testcontainers:postgresql")
+
+	// Detekt
+	detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.21.0")
 }
 
 dependencyManagement {
 	imports {
 		mavenBom("org.testcontainers:testcontainers-bom:${property("testcontainersVersion")}")
+	}
+}
+
+detekt {
+	toolVersion = "1.21.0"
+	config = files("config/detekt/detekt.yml")
+	buildUponDefaultConfig = true
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+
+	autoCorrect = true
+
+	baseline.set(file("$projectDir/config/detekt/baseline.xml"))
+
+	reports {
+		xml.required.set(false)
+		html.required.set(false)
+		txt.required.set(false)
+		sarif.required.set(false)
 	}
 }
 
