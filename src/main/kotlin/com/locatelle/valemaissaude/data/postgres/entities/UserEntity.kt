@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDate
@@ -50,10 +51,14 @@ class UserEntity(
     val profilePhoto: ImageEntity,
 
     @OneToOne
-    @JoinColumn(name = "address", nullable = true)
+    @JoinColumn(name = "address_id", nullable = true)
     val address: AddressEntity,
 
     @Enumerated(STRING)
     @Column(name = "cep", nullable = false)
-    val userType: UserTypeEnum? = DEFAULT
+    val userType: UserTypeEnum? = DEFAULT,
+
+    @ManyToOne
+    @JoinColumn(name = "professional_id", nullable = true)
+    val professionalId: UserEntity? = null
 )
