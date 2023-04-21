@@ -1,5 +1,6 @@
 package com.locatelle.valemaissaude.services
 
+import com.locatelle.valemaissaude.exceptions.BaseException
 import com.locatelle.valemaissaude.models.UserModel
 import com.locatelle.valemaissaude.repositories.UserRepository
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -15,7 +16,8 @@ class UserService(
     private val passwordEncoder: BCryptPasswordEncoder,
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String?): UserDetails {
-        val userModel = userRepository.findByDocument(username ?: "") ?: throw RuntimeException("User not found")
+        val userModel = userRepository.findByDocument(username ?: "")
+            ?: throw BaseException(message = "User not found!", code = 404)
         return User(userModel.cpf, userModel.password, listOf(SimpleGrantedAuthority(userModel.userType!!.name)))
     }
 

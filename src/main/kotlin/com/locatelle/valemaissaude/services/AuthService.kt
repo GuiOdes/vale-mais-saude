@@ -3,12 +3,12 @@ package com.locatelle.valemaissaude.services
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.locatelle.valemaissaude.exceptions.BaseException
 import com.locatelle.valemaissaude.models.UserModel
 import com.locatelle.valemaissaude.repositories.UserRepository
 import com.locatelle.valemaissaude.utils.getMillisByMinute
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
-import java.lang.RuntimeException
 import java.util.Date
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -32,7 +32,8 @@ class AuthService(
             val verifier = JWT.require(algorithm).build()
             val decodedJWT = verifier.verify(refreshToken)
             val userDocument = decodedJWT.subject
-            val userModel = userRepository.findByDocument(userDocument) ?: throw RuntimeException("User not found!")
+            val userModel = userRepository.findByDocument(userDocument)
+                ?: throw BaseException(message = "User not found!", code = 404)
 
             val accessToken = generateToken(userModel, request, algorithm, AUTH_TOKEN_EXPIRATION_MINUTES)
             val newRefreshToken = generateToken(userModel, request, algorithm, REFRESH_TOKEN_EXPIRATION_MINUTES)
@@ -44,7 +45,7 @@ class AuthService(
             response.contentType = MediaType.APPLICATION_JSON_VALUE
             ObjectMapper().writeValue(response.outputStream, responseAttributes)
         } else {
-            throw RuntimeException("Invalid refresh token!")
+            throw BaseException(message = "Invalid refresh token!", code = 403)
         }
     }
 
