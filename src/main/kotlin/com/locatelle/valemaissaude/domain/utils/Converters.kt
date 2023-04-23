@@ -1,5 +1,6 @@
 package com.locatelle.valemaissaude.domain.utils
 
+import com.locatelle.valemaissaude.domain.exceptions.BaseException
 import java.util.UUID
 
 const val MINUTES_PER_HOUR = 60
@@ -9,8 +10,7 @@ fun stringToUUID(value: String): UUID {
     return runCatching {
         UUID.fromString(value)
     }.onFailure {
-        throw RuntimeException("Invalid uuid value")
-//        throw InvalidUUIDException()
+        throw BaseException(message = "Invalid UUID value!", code = 400)
     }.getOrThrow()
 }
 fun getMillisByMinute(minutes: Int) = minutes * MINUTES_PER_HOUR * MILLIS_PER_MINUTE

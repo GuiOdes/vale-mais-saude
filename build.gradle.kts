@@ -48,6 +48,9 @@ dependencies {
 
 	// Detekt
 	detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.21.0")
+
+	// Logging
+	implementation("io.github.microutils:kotlin-logging:3.0.0")
 }
 
 dependencyManagement {
