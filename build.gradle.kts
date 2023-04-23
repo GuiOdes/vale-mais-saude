@@ -7,6 +7,7 @@ plugins {
 	kotlin("plugin.spring") version "1.7.22"
 	kotlin("plugin.jpa") version "1.7.22"
 	id("io.gitlab.arturbosch.detekt").version("1.21.0")
+	id("jacoco")
 }
 
 group = "com.locatelle"
@@ -42,6 +43,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("io.mockk:mockk:1.13.5")
+
 
 	// Detekt
 	detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.21.0")
@@ -85,4 +88,9 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+jacoco {
+	toolVersion = "0.8.7"
 }
