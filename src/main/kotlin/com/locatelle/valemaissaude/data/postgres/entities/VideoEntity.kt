@@ -29,4 +29,11 @@ class VideoEntity(
         id = id,
         reference = reference
     )
+
+    companion object {
+        fun of(videoModel: VideoModel) = VideoEntity(
+            id = videoModel.id,
+            reference = videoModel.reference
+        )
+    }
 }

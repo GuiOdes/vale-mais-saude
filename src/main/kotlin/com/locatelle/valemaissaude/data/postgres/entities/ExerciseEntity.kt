@@ -10,6 +10,8 @@ import javax.persistence.EnumType.STRING
 import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
 
@@ -44,7 +46,11 @@ class ExerciseEntity(
     val group: ExerciseGroupEnum,
 
     @OneToMany
-    val videos: List<VideoEntity>
+    val videos: List<VideoEntity>,
+
+    @ManyToOne
+    @JoinColumn(name = "professional_id", nullable = false)
+    val professionalOwner: UserEntity
 ) {
 
     fun toExerciseModel() = ExerciseModel(
@@ -55,6 +61,25 @@ class ExerciseEntity(
         setRepetitionCount = setRepetitionCount,
         repetitionDuration = repetitionDuration,
         group = group,
-        videos = videos.map { it.toVideoModel() }
+        videos = videos.map { it.toVideoModel() },
+        professionalModel = professionalOwner.toUserModel()
     )
+
+    companion object {
+
+        fun of(
+            exerciseModel: ExerciseModel,
+            professionalOwner: UserEntity
+        ) = ExerciseEntity(
+            id = exerciseModel.id,
+            title = exerciseModel.title,
+            explanation = exerciseModel.explanation,
+            countSets = exerciseModel.countSets,
+            setRepetitionCount = exerciseModel.setRepetitionCount,
+            repetitionDuration = exerciseModel.repetitionDuration,
+            group = exerciseModel.group,
+            videos = exerciseModel.videos.map { VideoEntity.of(it) },
+            professionalOwner = professionalOwner
+        )
+    }
 }

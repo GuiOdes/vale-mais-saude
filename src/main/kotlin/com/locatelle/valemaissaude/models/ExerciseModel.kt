@@ -11,5 +11,6 @@ class ExerciseModel(
     val setRepetitionCount: Int,
     val repetitionDuration: Int,
     val group: ExerciseGroupEnum,
-    val videos: List<VideoModel>
+    val videos: List<VideoModel>,
+    val professionalModel: UserModel
 )

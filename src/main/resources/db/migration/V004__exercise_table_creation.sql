@@ -5,5 +5,6 @@ CREATE TABLE tb_exercise (
     count_sets INT NOT NULL,
     set_repetition_count INT NOT NULL,
     repetition_duration INT NOT NULL,
-    exercise_group VARCHAR(50) NOT NULL
+    exercise_group VARCHAR(50) NOT NULL,
+    professional_owner_id UUID NOT NULL REFERENCES tb_user(id)
 );
