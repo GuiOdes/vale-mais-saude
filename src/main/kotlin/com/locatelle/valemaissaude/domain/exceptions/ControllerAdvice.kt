@@ -1,6 +1,6 @@
-package com.locatelle.valemaissaude.exceptions
+package com.locatelle.valemaissaude.domain.exceptions
 
-import com.locatelle.valemaissaude.rest.requests.ResponseError
+import com.locatelle.valemaissaude.adapter.response.ResponseError
 import com.locatelle.valemaissaude.utils.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

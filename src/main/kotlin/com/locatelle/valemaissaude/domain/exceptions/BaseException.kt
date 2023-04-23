@@ -1,4 +1,4 @@
-package com.locatelle.valemaissaude.exceptions
+package com.locatelle.valemaissaude.domain.exceptions
 
 import com.locatelle.valemaissaude.utils.logger
 import java.lang.RuntimeException

@@ -4,13 +4,10 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.locatelle.valemaissaude.adapter.service.AuthService
+import com.locatelle.valemaissaude.domain.exceptions.BaseException
 import com.locatelle.valemaissaude.domain.model.UserModel
 import com.locatelle.valemaissaude.domain.repository.UserRepository
 import com.locatelle.valemaissaude.domain.utils.getMillisByMinute
-import com.locatelle.valemaissaude.exceptions.BaseException
-import com.locatelle.valemaissaude.models.UserModel
-import com.locatelle.valemaissaude.repositories.UserRepository
-import com.locatelle.valemaissaude.utils.getMillisByMinute
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import java.util.Date

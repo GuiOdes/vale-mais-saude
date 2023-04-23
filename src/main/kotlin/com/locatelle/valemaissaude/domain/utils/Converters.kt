@@ -1,6 +1,6 @@
 package com.locatelle.valemaissaude.domain.utils
 
-import com.locatelle.valemaissaude.exceptions.BaseException
+import com.locatelle.valemaissaude.domain.exceptions.BaseException
 import java.util.UUID
 
 const val MINUTES_PER_HOUR = 60

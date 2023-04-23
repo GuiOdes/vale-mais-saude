@@ -1,6 +1,6 @@
-package com.locatelle.valemaissaude.rest.requests
+package com.locatelle.valemaissaude.adapter.response
 
-import com.locatelle.valemaissaude.exceptions.BaseException
+import com.locatelle.valemaissaude.domain.exceptions.BaseException
 import java.time.LocalDateTime
 
 data class ResponseError(
