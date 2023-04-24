@@ -19,7 +19,7 @@ class VideoEntity(
         name = "UUID",
         strategy = "org.hibernate.id.UUIDGenerator"
     )
-    val id: UUID,
+    val id: UUID? = null,
 
     @Column(name = "reference", nullable = false)
     val reference: String
